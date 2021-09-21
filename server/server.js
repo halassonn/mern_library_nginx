@@ -6,7 +6,7 @@
 /*   By: halasson <halasson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 09:51:30 by halasson          #+#    #+#             */
-/*   Updated: 2021/09/21 11:01:39 by halasson         ###   ########.fr       */
+/*   Updated: 2021/09/21 13:49:19 by halasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ const express = require("express");
 const connectToDB = require("./database/db");
 const ErrorsMiddleware = require("./middleware/errorMiddleware");
 const LibraryError = require("./utils/libraryError");
-const karyawanRoutes = require("./routes/karyawanRoutes");
+const routerapi = require("./routes");
 const Feeding = require("./Feed");
 
 process.on("uncaughtException", (error) => {
@@ -43,7 +43,7 @@ app.get("/test", (req, res) => {
     });
 });
 
-app.use("/api/v1/", karyawanRoutes);
+app.use("/api/v1/", routerapi);
 
 // Error middleware
 app.all("*", (req, res, next) => {

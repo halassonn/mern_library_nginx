@@ -1,4 +1,3 @@
-const express = require("express");
 const { uploadFile } = require("../middleware/uploadfile");
 const {
     getAllKaryawan,
@@ -7,9 +6,9 @@ const {
 
 const router = require("express-promise-router")();
 
+router.route("/").get(getAllKaryawan);
 router
-    .route("/karyawan_import")
-    .get(getAllKaryawan)
+    .route("/import")
     .post(uploadFile({ type: "xls" }).single("import"), importKaryawans);
 
 module.exports = router;

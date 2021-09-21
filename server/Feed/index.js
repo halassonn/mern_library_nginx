@@ -6,11 +6,12 @@
 /*   By: halasson <halasson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 10:22:57 by halasson          #+#    #+#             */
-/*   Updated: 2021/09/21 10:22:59 by halasson         ###   ########.fr       */
+/*   Updated: 2021/09/21 13:53:10 by halasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 const Jabatan = require("../models/parameters/JabatanModel");
+const User = require("../models/UserModel");
 const jabatan = [
     { kode_tingkat_jabatan: "1", kode: "1MP285", desc: "Komisaris Utama" },
     { kode_tingkat_jabatan: "1", kode: "1MP358", desc: "Komisaris" },
@@ -45,7 +46,32 @@ const jabatan = [
     { kode_tingkat_jabatan: "6", kode: "6PB383", desc: "Security" },
 ];
 
+const dataadmin = {
+    username: "root",
+    password: "su12345678",
+    nik: "00000000",
+    nama: "Root",
+    level: "root",
+    kode_kantor: "000",
+    nama_kantor: "root",
+};
+
 const Feeding = async () => {
+    //feed super user
+    console.log("feed super admin user ======>");
+    const useradmin = await User.findOne({ username: dataadmin.username });
+    if (!useradmin) {
+        const user = new User(dataadmin);
+        await user
+            .save()
+            .then(() => {
+                console.log("Creating User As Administrator is  Success");
+            })
+            .catch((error) => {
+                console.log("Creating User As Administrator is  Failed", error);
+            });
+    }
+
     //feed jabatan parameter
     console.log("feed parameter jabatan ======>");
 

@@ -6,7 +6,7 @@
 /*   By: halasson <halasson@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 09:51:02 by halasson          #+#    #+#             */
-/*   Updated: 2021/09/21 11:59:10 by halasson         ###   ########.fr       */
+/*   Updated: 2021/09/21 13:08:15 by halasson         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ const fs = require("fs");
 const { masakerja } = require("../utils");
 const Joi = require("@hapi/joi");
 const { KarywanSchemaImport } = require("../joivalidation/karyawanimport");
+const { setLogs } = require("../controllers/logcontroller");
 
 // $-title   Get Data Karyawan
 // $-path    GET /api/v1/karyawans
@@ -39,8 +40,8 @@ exports.importKaryawans = AsyncManager(async (req, res, next) => {
 
     const file = req.file.path;
     const user = req.user;
-    const kantor = user !==undefined ? user.kode_kantor : 587;
-    const namauser = user !==undefined ? user.nama : "Halasson";
+    const kantor = user !== undefined ? user.kode_kantor : 587;
+    const namauser = user !== undefined ? user.nama : "Halasson";
 
     if (!file) {
         return next(new LibraryError(`No File Choosed`, 404));
@@ -119,15 +120,15 @@ exports.importKaryawans = AsyncManager(async (req, res, next) => {
                     await Karyawan.collection
                         .insertMany(resv)
                         .then((dd) => {
-                            // setLogs({
-                            //     user: namauser,
-                            //     kantor: kantor,
-                            //     action: `import data karyawan`,
-                            //     method: req.method,
-                            //     status_code: res.statusCode,
-                            //     ket: `SUCCESS`,
-                            // });
-                            console.log(dd)
+                            setLogs({
+                                user: namauser,
+                                kantor: kantor,
+                                action: `import data karyawan`,
+                                method: req.method,
+                                status_code: res.statusCode,
+                                ket: `SUCCESS`,
+                            });
+                            console.log(dd);
                             return res.status(200).json(dd);
                         })
                         .catch((error) => {

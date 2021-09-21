@@ -9,21 +9,40 @@ services:
       container_name: salary-system
       # volumes allow sharing of data in run-time between host and container
       volumes:
-         # don't overwrite this folder in container with the local one
+      # don't overwrite this folder in container with the local one
          - /app/node_modules
-         # map current local directory to the /app inside the container
-         #This is a must for development in order to update our container whenever a change to the source code is made. Without this, you would have to rebuild the image each time you make a change to source code.
+      # map current local directory to the /app inside the container
+      #This is a must for development in order to update our container whenever a change to the source code is made. Without this, you would have to rebuild the image each time you make a change to source code.
          - ./server:/app
       ports:
          - 5000:5000
       depends_on:
          - mongodb
+         - redis
       environment:
          NODE_ENV: ${NODE_ENV}
          MONGO_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb
+         REDIS_URI: redis://redishrddb
+         X_API_KEY: ${X_API_KEY}
+         X_API_KEY_PROD: ${X_API_KEY_PROD}
+         DIR_AVATAR_UPLOAD: ${DIR_AVATAR_UPLOAD}
+         DIR_AVATAR_DEFAULT: ${DIR_AVATAR_DEFAULT}
+         DIR_XLS_DEFAULT: ${DIR_XLS_DEFAULT}
+         AVATAR_DEFAULT: ${AVATAR_DEFAULT}
+         JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+         JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+         JWT_ACCESS_TOKEN_TIME: ${JWT_ACCESS_TOKEN_TIME}
+         JWT_REFRESH_TOKEN_TIME: ${JWT_REFRESH_TOKEN_TIME}
       networks:
          - gtm-network-api
-
+   redis:
+      container_name: redishrddb
+      restart: always
+      image: redis
+      ports:
+         - 6379:6379
+      networks:
+         - gtm-network-api
    mongodb:
       image: mongo
       restart: always
@@ -59,9 +78,9 @@ services:
          - gtm-network-api
 
 networks:
-   gtm-network-api:
-      driver: bridge
+  gtm-network-api:
+    driver: bridge
 
 volumes:
-   mongodb-data:
-      driver: local
+  mongodb-data:
+    driver: local
