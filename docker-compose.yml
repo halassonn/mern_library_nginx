@@ -76,7 +76,33 @@ services:
          - mongodb-data
       networks:
          - gtm-network-api
-
+   penggajian:
+      restart: always
+      build:
+         context: ./penggajian
+         dockerfile: Dockerfile.dev
+      container_name: penggajian_web_client
+      volumes:
+         - ./app/node_modules
+         - ./penggajian:/app
+      ports:
+         - 3000:3000
+      depends_on:
+         - hrd-api
+      networks:
+         - gtm-network-api
+   nginx:
+      restart: always
+      depends_on:
+         - hrd-api
+         - penggajian
+      build:
+         context: ./nginx
+         dockerfile: Dockerfile.dev
+      ports:
+         - 8080:80
+      networks:
+         - gtm-network-api
 networks:
   gtm-network-api:
     driver: bridge
